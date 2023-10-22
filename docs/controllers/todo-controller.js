@@ -1,4 +1,4 @@
-import { Controller } from '/vendor/stimulus.js';
+import { Controller } from '../vendor/stimulus.js';
 
 
 class Todo {

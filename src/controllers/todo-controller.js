@@ -7,21 +7,24 @@ export default class extends Controller {
         'form',
         'todos',
         'todoTemplate',
-    ];
+    ]
 
     static values = {
         todos: Array,
-        action: String,
     }
+
+    modal = null;
+    confirmCallback = null;
 
     // ----
 
     initialize() {
-        // this.todosValue = JSON.parse(localStorage.getItem('todos') ?? '[]');
+        this.todosValue = JSON.parse(localStorage.getItem('todos') ?? '[]');
+        this.modal = new bootstrap.Modal(this.modalTarget);
     }
 
     todosValueChanged() {
-        // localStorage.setItem('todos', this.todosValue);
+        localStorage.setItem('todos', JSON.stringify(this.todosValue));
 
         $(this.todosTarget).empty();
         
@@ -37,51 +40,36 @@ export default class extends Controller {
     // ----
 
     add() {
-        this.actionValue = 'add';
-        this.#openModal('Add');
+        $(this.formTarget).find('#title').val('');
+        $(this.formTarget).find('#description').val('');
+        $(this.formTarget).find('#due-date').val('');
+        
+        $(this.modalTarget).find('.modal-title').text("Add TO-DO");
+        
+        this.modal.show();
+
+        this.confirmCallback = () => {
+            const todo = this.#readForm();
+
+            const todos = this.todosValue;
+            todos.push(todo);
+            this.todosValue = todos;
+
+            this.modal.hide();
+        };
     }
 
     edit() {
-        this.actionValue = 'edit';
-        this.#openModal('Edit');
     }
 
     delete() {
-
     }
 
     confirm() {
-        switch (this.actionValue) {
-            case 'add': {
-                this.#onAddConfirmed();
-                this.#closeModal();
-                break;
-            }
-        }
+        this.confirmCallback();
     }
 
     // ----
-
-    #onAddConfirmed() {
-        const todo = this.#readForm();
-
-        const todos = this.todosValue;
-        todos.push(todo);
-        this.todosValue = todos;
-    }
-
-    // ----
-
-    #openModal(action) {
-        this.#clearForm();
-
-        $(this.modalTarget).find('.modal-title').text(`${action} TO-DO`);
-        new bootstrap.Modal(this.modalTarget).show();
-    }
-
-    #closeModal() {
-        new bootstrap.Modal(this.modalTarget).hide();
-    }
 
     #readForm() {
         return {
@@ -89,6 +77,12 @@ export default class extends Controller {
             description: $(this.formTarget).find('#description').val(),
             dueDate: $(this.formTarget).find('#due-date').val(),
         };
+    }
+
+    #writeForm(todo) {
+        $(this.formTarget).find('#title').val(todo.title);
+        $(this.formTarget).find('#description').val(todo.description);
+        $(this.formTarget).find('#due-date').val(todo.dueDate);
     }
 
     #clearForm() {

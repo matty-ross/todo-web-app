@@ -31,7 +31,7 @@
             </header>
             
             <main>
-                <div data-controller="todo" data-todo-todos-value="[]">
+                <div data-controller="todo">
                     <div class="modal fade" data-bs-backdrop="static" data-todo-target="modal">
                         <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                             <div class="modal-content">
@@ -57,27 +57,19 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button
-                                        class="btn btn-primary"
-                                        data-action="click->todo#confirm"
-                                    >
-                                        Confirm
-                                    </button>
+                                    <button class="btn btn-primary" data-action="click->todo#confirm">Confirm</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <button
-                        class="btn btn-primary mb-5 p-3"
-                        data-action="click->todo#add"
-                    >
+                    <button class="btn btn-primary mb-5 p-3" data-action="click->todo#add">
                         <i class="bi bi-plus"></i>
                         <span class="ms-1">Add a TO-DO</span>
                     </button>
                     
                     <div class="table-responsive">
-                        <table class="table table-hover">
+                        <table class="table table-hover align-middle">
                             <thead class="table-dark">
                                 <tr>
                                     <th></th>
@@ -91,22 +83,10 @@
                         <template data-todo-target="todoTemplate">
                             <tr>
                                 <td>
-                                    <!-- <button
-                                        class="text-primary"
-                                        data-action="click->todo#modalDetail"
-                                    >
-                                        <i class="bi bi-eye"></i>
-                                    </button> -->
-                                    <button
-                                        class="text-primary"
-                                        data-action="click->todo#edit"
-                                    >
+                                    <button class="btn btn-outline-primary" data-action="click->todo#edit">
                                         <i class="bi bi-pencil"></i>
                                     </button>
-                                    <button
-                                        class="text-primary"
-                                        data-action="click->todo#delete"
-                                    >
+                                    <button class="btn btn-outline-danger" data-action="click->todo#delete">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </td>

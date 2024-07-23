@@ -30,6 +30,7 @@ export default class extends Controller {
         
         this.todosValue.forEach((todo, index) => {
             const todoTemplate = $($(this.todoTemplateTarget).html());
+            todoTemplate.data('index', index);
             $(todoTemplate.find('td')[1]).text(todo.title);
             $(todoTemplate.find('td')[2]).text(todo.dueDate);
 
@@ -40,9 +41,7 @@ export default class extends Controller {
     // ----
 
     add() {
-        $(this.formTarget).find('#title').val('');
-        $(this.formTarget).find('#description').val('');
-        $(this.formTarget).find('#due-date').val('');
+        this.#clearForm();
         
         $(this.modalTarget).find('.modal-title').text("Add TO-DO");
         
@@ -59,14 +58,53 @@ export default class extends Controller {
         };
     }
 
-    edit() {
+    edit(e) {
+        const index = $(e.currentTarget).parents('tr').data('index');
+        const todo = this.todosValue[index];
+
+        this.#writeForm(todo);
+
+        $(this.modalTarget).find('.modal-title').text("Edit TO-DO");
+        
+        this.modal.show();
+
+        this.confirmCallback = () => {
+            const todo = this.#readForm();
+
+            const todos = this.todosValue;
+            todos[index] = todo;
+            this.todosValue = todos;
+
+            this.modal.hide();
+        };
     }
 
-    delete() {
+    delete(e) {
+        const index = $(e.currentTarget).parents('tr').data('index');
+        const todo = this.todosValue[index];
+
+        this.confirmCallback = null;
+
+        Swal.fire({
+            title: "Delete TO-DO",
+            text: `Are you sure to delete '${todo.title}' TO-DO?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then(result => {
+            if (result.isConfirmed) {
+                const todos = this.todosValue;
+                todos.splice(index, 1);
+                this.todosValue = todos;
+            }
+        });
     }
 
     confirm() {
-        this.confirmCallback();
+        if (this.confirmCallback) {
+            this.confirmCallback();
+        }
     }
 
     // ----

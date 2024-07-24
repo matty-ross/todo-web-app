@@ -62,11 +62,12 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <button class="btn btn-primary mb-5 p-3" data-action="click->todo#add">
-                        <i class="bi bi-plus"></i>
-                        <span class="ms-1">Add a TO-DO</span>
-                    </button>
+
+                    <div class="mb-3">
+                        <button class="btn btn-primary" data-action="click->todo#add">
+                            <i class="bi bi-plus"></i>
+                        </button>
+                    </div>
                     
                     <div class="table-responsive">
                         <table class="table table-hover align-middle">
@@ -77,8 +78,7 @@
                                     <th>Due date</th>
                                 </tr>
                             </thead>
-                            <tbody data-todo-target="todos">
-                            </tbody>
+                            <tbody data-todo-target="todos"></tbody>
                         </table>
                         <template data-todo-target="todoTemplate">
                             <tr>

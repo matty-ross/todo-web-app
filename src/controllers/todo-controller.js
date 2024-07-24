@@ -30,9 +30,13 @@ export default class extends Controller {
         
         this.todosValue.forEach((todo, index) => {
             const todoTemplate = $($(this.todoTemplateTarget).html());
-            todoTemplate.data('index', index);
-            $(todoTemplate.find('td')[1]).text(todo.title);
-            $(todoTemplate.find('td')[2]).text(todo.dueDate);
+            todoTemplate.find('button').data('index', index);
+            todoTemplate.find('td').text((index) => {
+                switch (index) {
+                    case 1: return todo.title;
+                    case 2: return todo.dueDate;
+                }
+            });
 
             $(this.todosTarget).append(todoTemplate);
         });
@@ -44,7 +48,6 @@ export default class extends Controller {
         this.#clearForm();
         
         $(this.modalTarget).find('.modal-title').text("Add TO-DO");
-        
         this.modal.show();
 
         this.confirmCallback = () => {
@@ -58,14 +61,13 @@ export default class extends Controller {
         };
     }
 
-    edit(e) {
-        const index = $(e.currentTarget).parents('tr').data('index');
+    edit(event) {
+        const index = $(event.currentTarget).data('index');
         const todo = this.todosValue[index];
 
         this.#writeForm(todo);
 
         $(this.modalTarget).find('.modal-title').text("Edit TO-DO");
-        
         this.modal.show();
 
         this.confirmCallback = () => {
@@ -79,26 +81,25 @@ export default class extends Controller {
         };
     }
 
-    delete(e) {
-        const index = $(e.currentTarget).parents('tr').data('index');
+    async delete(event) {
+        const index = $(event.currentTarget).data('index');
         const todo = this.todosValue[index];
 
         this.confirmCallback = null;
 
-        Swal.fire({
+        const result = await Swal.fire({
             title: "Delete TO-DO",
             text: `Are you sure to delete '${todo.title}' TO-DO?`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Yes',
             cancelButtonText: 'No',
-        }).then(result => {
-            if (result.isConfirmed) {
-                const todos = this.todosValue;
-                todos.splice(index, 1);
-                this.todosValue = todos;
-            }
         });
+        if (result.isConfirmed) {
+            const todos = this.todosValue;
+            todos.splice(index, 1);
+            this.todosValue = todos;
+        }
     }
 
     confirm() {
